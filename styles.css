@@ -18,6 +18,13 @@
     --radius: 0.5rem;
     --radius-sm: 0.375rem;
     --transition: all 0.2s ease;
+    
+    /* Ruoli specifici */
+    --role-keeper: #fbbf24;
+    --role-defender: #3b82f6;
+    --role-midfielder: #10b981;
+    --role-attacker: #ef4444;
+    --own-team-gold: #fbbf24;
 }
 
 * {
@@ -194,11 +201,35 @@ input:focus, select:focus {
     padding: 1rem;
     text-align: center;
     transition: var(--transition);
+    position: relative;
 }
 
 .participant-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+}
+
+.participant-card.own-team {
+    border: 2px solid var(--own-team-gold);
+    box-shadow: 0 0 0 1px var(--own-team-gold);
+}
+
+.participant-card {
+    --budget-ratio: 0;
+    --hue: calc(var(--budget-ratio) * 120); /* 0 (rosso) a 120 (verde) - INVERTITO */
+    --saturation: 70%;
+    --lightness: calc(50% + var(--budget-ratio) * 10%);
+    background: linear-gradient(135deg, hsl(var(--hue), var(--saturation), var(--lightness)), hsl(var(--hue), var(--saturation), calc(var(--lightness) - 10%)));
+    color: white;
+}
+
+.participant-card .participant-budget,
+.participant-card .participant-name {
+    color: white;
+}
+
+.participant-card .participant-players {
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .participant-name {
@@ -217,6 +248,38 @@ input:focus, select:focus {
 .participant-players {
     font-size: 0.875rem;
     color: var(--text-secondary);
+}
+
+.own-team-star {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 1.5rem;
+    z-index: 10;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.participant-card {
+    position: relative;
+}
+
+.participant-roles {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.9);
+    gap: 0.25rem;
+}
+
+.role-count {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: bold;
+    min-width: 2rem;
+    text-align: center;
+    font-size: 0.75rem;
 }
 
 .players-header {
@@ -279,12 +342,27 @@ input:focus, select:focus {
 }
 
 .player-role {
-    background: var(--primary-color);
     color: white;
     padding: 0.25rem 0.5rem;
     border-radius: var(--radius-sm);
     font-size: 0.75rem;
     font-weight: 600;
+}
+
+.role-keeper {
+    background: var(--role-keeper);
+}
+
+.role-defender {
+    background: var(--role-defender);
+}
+
+.role-midfielder {
+    background: var(--role-midfielder);
+}
+
+.role-attacker {
+    background: var(--role-attacker);
 }
 
 .player-team {
