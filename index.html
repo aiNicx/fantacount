@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantacalcio Asta 2025-26</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>Fantacalcio Asta 2025-26</h1>
+            <button class="btn-reset" id="resetBtn" title="Reset configurazione">🔄</button>
+        </header>
+
+        <!-- Setup Section -->
+        <section id="setupSection" class="section setup-section">
+            <div class="card">
+                <h2>Configurazione Asta</h2>
+                <form id="setupForm">
+                    <div class="form-group">
+                        <label for="numParticipants">Numero Partecipanti</label>
+                        <select id="numParticipants" required>
+                            <option value="">Seleziona...</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                    <div id="participantsContainer"></div>
+                    <div class="form-group">
+                        <label for="initialBudget">Fantamilioni Iniziali</label>
+                        <input type="number" id="initialBudget" value="500" min="100" max="1000" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Inizia Asta</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Main App Section -->
+        <section id="mainApp" class="section main-app" style="display: none;">
+    
+
+            <!-- Filters -->
+            <div id="filtersSection" class="section">
+                <div class="card filter-card">
+                    <div class="filter-row">
+                        <input type="text" id="searchInput" placeholder="Cerca giocatore..." class="search-input">
+                        <select id="roleFilter" class="filter-select">
+                            <option value="">Tutti i ruoli</option>
+                            <option value="P">Portieri</option>
+                            <option value="D">Difensori</option>
+                            <option value="C">Centrocampisti</option>
+                            <option value="A">Attaccanti</option>
+                        </select>
+                        <select id="teamFilter" class="filter-select">
+                            <option value="">Tutte le squadre</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Participants Status -->
+            <div id="participantsStatus" class="section">
+                <div class="participants-grid" id="participantsGrid"></div>
+            </div>
+
+            <!-- Players List -->
+            <div id="playersSection" class="section">
+                <div class="players-header">
+                    <h3>Giocatori Disponibili (<span id="playersCount">0</span>)</h3>
+                    <div class="sort-controls">
+                        <select id="sortBy">
+                            <option value="nome">Nome</option>
+                            <option value="quotazioneA">Quotazione</option>
+                            <option value="fvm">Fantavoto</option>
+                            <option value="squadra">Squadra</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="playersList" class="players-grid"></div>
+            </div>
+
+            <!-- Auction Modal -->
+            <div id="auctionModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Asta Giocatore</h3>
+                        <button class="modal-close" id="closeModal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="playerDetails"></div>
+                        <div class="auction-form">
+                            <div class="form-group">
+                                <label for="bidAmount">Offerta (fantamilioni)</label>
+                                <input type="number" id="bidAmount" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="bidder">Partecipante</label>
+                                <select id="bidder" required></select>
+                            </div>
+                            <button type="button" class="btn-primary" id="confirmBid">Conferma Acquisto</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SheetJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
