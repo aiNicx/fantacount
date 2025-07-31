@@ -69,6 +69,56 @@ export class DataManager {
         return this.players.filter(player => player.boughtBy === participantName);
     }
 
+    updatePlayerPrice(playerId, participantName, newPrice) {
+        const player = this.getPlayerById(playerId);
+        const participant = this.getParticipantByName(participantName);
+
+        if (!player || !participant) return false;
+        if (player.status !== 'comprato' || player.boughtBy !== participantName) return false;
+
+        const oldPrice = player.boughtPrice;
+        const priceDifference = newPrice - oldPrice;
+
+        // Check if participant has enough budget for price increase
+        if (participant.budget < priceDifference) return false;
+
+        // Update player price in main players array
+        player.boughtPrice = newPrice;
+
+        // Update participant budget
+        participant.budget -= priceDifference;
+
+        // Update player in participant's roster
+        const playerInRoster = participant.players.find(p => p.id === playerId);
+        if (playerInRoster) {
+            playerInRoster.boughtPrice = newPrice;
+        }
+
+        return true;
+    }
+
+    removePlayerFromParticipant(playerId, participantName) {
+        const player = this.getPlayerById(playerId);
+        const participant = this.getParticipantByName(participantName);
+
+        if (!player || !participant) return false;
+        if (player.status !== 'comprato' || player.boughtBy !== participantName) return false;
+
+        // Reset player status
+        player.status = 'libero';
+        player.boughtBy = null;
+        const refundAmount = player.boughtPrice;
+        player.boughtPrice = null;
+
+        // Refund budget to participant
+        participant.budget += refundAmount;
+
+        // Remove player from participant's roster
+        participant.players = participant.players.filter(p => p.id !== playerId);
+
+        return true;
+    }
+
     getPlayerStats() {
         const totalPlayers = this.players.length;
         const boughtPlayers = this.players.filter(p => p.status === 'comprato').length;

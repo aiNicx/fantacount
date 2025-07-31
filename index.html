@@ -78,12 +78,21 @@
             <!-- Players List -->
             <div id="playersSection" class="section">
                 <div class="players-header">
-                    <h3>Giocatori Disponibili (<span id="playersCount">0</span>)</h3>
+                    <h3>Giocatori</h3>
+                    <div class="players-counters">
+                        <span id="totalCount" class="counter-item active" onclick="window.app.uiManager.filterByStatus('all')">
+                            Totali: <span class="count">0</span>
+                        </span>
+                        <span id="availableCount" class="counter-item" onclick="window.app.uiManager.filterByStatus('available')">
+                            Disponibili: <span class="count">0</span>
+                        </span>
+                        <span id="boughtCount" class="counter-item" onclick="window.app.uiManager.filterByStatus('bought')">
+                            Assegnati: <span class="count">0</span>
+                        </span>
+                    </div>
                     <div class="sort-controls">
                         <select id="sortBy">
                             <option value="nome">Nome</option>
-                            <option value="quotazioneA">Quotazione</option>
-                            <option value="fvm">Fantavoto</option>
                             <option value="squadra">Squadra</option>
                         </select>
                     </div>

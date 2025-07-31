@@ -31,6 +31,13 @@ export class AuctionManager {
             return;
         }
 
+        // Check formation limits
+        const formationCheck = window.app.uiManager.canBuyPlayer(bidder, player.ruolo);
+        if (!formationCheck.canBuy) {
+            alert(formationCheck.reason);
+            return;
+        }
+
         const success = window.app.dataManager.buyPlayer(player.id, bidder, bidAmount);
         
         if (success) {
