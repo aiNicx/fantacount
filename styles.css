@@ -67,7 +67,13 @@ body {
     color: var(--primary-color);
 }
 
-.btn-reset {
+.header-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.btn-reset, .btn-export {
     background: none;
     border: none;
     font-size: 1.25rem;
@@ -77,8 +83,32 @@ body {
     transition: var(--transition);
 }
 
-.btn-reset:hover {
+.btn-reset:hover, .btn-export:hover {
     background-color: var(--surface-hover);
+}
+
+.btn-export {
+    color: var(--success-color);
+}
+
+.btn-export:hover {
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+.file-input-import {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    transition: var(--transition);
+    background: var(--surface);
+}
+
+.file-input-import:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
 }
 
 .section {

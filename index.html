@@ -12,13 +12,31 @@
         <!-- Header -->
         <header class="app-header">
             <h1>Fantacalcio Asta 2025-26</h1>
-            <button class="btn-reset" id="resetBtn" title="Reset configurazione">🔄</button>
+            <div class="header-buttons">
+                <button class="btn-export" id="exportBtn" title="Esporta asta in Excel" style="display: none;">📊</button>
+                <button class="btn-reset" id="resetBtn" title="Reset configurazione">🔄</button>
+            </div>
         </header>
 
         <!-- Setup Section -->
         <section id="setupSection" class="section setup-section">
             <div class="card">
                 <h2>Configurazione Asta</h2>
+                
+                <!-- Import Asta Esistente -->
+                <div class="import-section" style="margin-bottom: 2rem; padding: 1rem; background: #f8fafc; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1rem; color: #374151;">Importa Asta Esistente</h3>
+                    <div class="form-group">
+                        <label for="importFile" style="font-size: 0.875rem; color: #6b7280;">Carica file Excel di un'asta precedente (opzionale)</label>
+                        <input type="file" id="importFile" accept=".xlsx,.xls" class="file-input-import">
+                        <div id="importStatus" class="upload-status"></div>
+                    </div>
+                </div>
+
+                <div class="divider" style="margin: 1.5rem 0; border-top: 1px solid #e2e8f0; position: relative;">
+                    <span style="position: absolute; top: -0.75rem; left: 50%; transform: translateX(-50%); background: white; padding: 0 1rem; color: #6b7280; font-size: 0.875rem;">oppure</span>
+                </div>
+
                 <form id="setupForm">
                     <div class="form-group">
                         <label for="numParticipants">Numero Partecipanti</label>

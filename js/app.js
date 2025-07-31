@@ -63,11 +63,37 @@ class FantasyAuctionApp {
         document.getElementById('numParticipants').addEventListener('change', (e) => {
             this.uiManager.generateParticipantInputs(e.target.value);
         });
+
+        // Export button
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            this.exportToExcel();
+        });
+
+        // Import file
+        document.getElementById('importFile').addEventListener('change', (e) => {
+            this.handleImportFile(e);
+        });
     }
 
     async handleSetup() {
         const numParticipants = parseInt(document.getElementById('numParticipants').value);
         const initialBudget = parseInt(document.getElementById('initialBudget').value);
+        
+        // Controlla se abbiamo già dati importati
+        const existingParticipants = this.dataManager.getParticipants();
+        const hasImportedData = existingParticipants.length > 0;
+        
+        if (hasImportedData) {
+            // Se abbiamo dati importati, procedi direttamente
+            console.log('Utilizzando dati importati esistenti');
+            this.uiManager.showMainApp();
+            this.uiManager.renderParticipantsStatus();
+            this.uiManager.renderPlayers();
+            this.uiManager.populateTeamFilter(this.dataManager.getPlayers());
+            return;
+        }
+        
+        // Altrimenti procedi con setup normale
         const participants = [];
 
         for (let i = 1; i <= numParticipants; i++) {
@@ -188,6 +214,124 @@ class FantasyAuctionApp {
 
     saveData() {
         this.dataManager.saveToStorage();
+    }
+
+    exportToExcel() {
+        try {
+            const success = this.dataManager.exportToExcel();
+            if (success) {
+                this.uiManager.showNotification('Asta esportata con successo!', 'success');
+            } else {
+                this.uiManager.showNotification('Errore nell\'export dell\'asta', 'error');
+            }
+        } catch (error) {
+            console.error('Errore export:', error);
+            this.uiManager.showNotification('Errore nell\'export: ' + error.message, 'error');
+        }
+    }
+
+    async handleImportFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const statusDiv = document.getElementById('importStatus');
+        statusDiv.textContent = 'Caricamento file...';
+        statusDiv.style.color = '#6b7280';
+
+        try {
+            const arrayBuffer = await this.readFileAsArrayBuffer(file);
+            console.log('File caricato, dimensione:', arrayBuffer.byteLength, 'bytes');
+            
+            statusDiv.textContent = 'Parsing dati...';
+            
+            const result = await this.dataManager.importFromExcel(arrayBuffer);
+            
+            if (result.success) {
+                statusDiv.innerHTML = `
+                    <div style="color: #10b981; font-weight: 500;">
+                        ✅ Importazione completata!<br>
+                        <small style="color: #6b7280;">
+                            ${result.participantsCount} partecipanti, 
+                            ${result.playersCount} giocatori, 
+                            ${result.boughtPlayersCount} già assegnati
+                        </small>
+                    </div>
+                `;
+                
+                // Popola automaticamente i campi del form
+                this.populateFormFromImport();
+                
+                // Salva i dati importati
+                this.saveData();
+                
+                // Mostra notifica di successo
+                this.uiManager.showNotification('Asta importata con successo!', 'success');
+                
+                // Procedi automaticamente alla visualizzazione principale
+                setTimeout(() => {
+                    this.uiManager.showMainApp();
+                    this.uiManager.renderParticipantsStatus();
+                    this.uiManager.renderPlayers();
+                    this.uiManager.populateTeamFilter(this.dataManager.getPlayers());
+                }, 1000);
+                
+            } else {
+                statusDiv.innerHTML = `<div style="color: #ef4444;">❌ ${result.error}</div>`;
+            }
+            
+        } catch (error) {
+            console.error('Errore caricamento file:', error);
+            statusDiv.innerHTML = `<div style="color: #ef4444;">❌ Errore: ${error.message}</div>`;
+        }
+        
+        // Resetta il file input
+        event.target.value = '';
+    }
+
+    readFileAsArrayBuffer(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = () => reject(new Error('Errore lettura file'));
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    populateFormFromImport() {
+        const participants = this.dataManager.getParticipants();
+        const initialBudget = this.dataManager.initialBudget;
+        
+        // Imposta numero partecipanti
+        document.getElementById('numParticipants').value = participants.length;
+        
+        // Imposta budget iniziale
+        document.getElementById('initialBudget').value = initialBudget;
+        
+        // Genera campi partecipanti
+        this.uiManager.generateParticipantInputs(participants.length);
+        
+        // Popola nomi partecipanti
+        participants.forEach((participant, index) => {
+            const input = document.getElementById(`participant${index + 1}`);
+            if (input) {
+                input.value = participant.name;
+            }
+        });
+        
+        // Disabilita il form per mostrare che è stato importato
+        const form = document.getElementById('setupForm');
+        const inputs = form.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.style.backgroundColor = '#f8fafc';
+            input.style.borderColor = '#10b981';
+        });
+        
+        // Aggiorna il pulsante di submit
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.textContent = 'Continua con Asta Importata';
+            submitBtn.style.backgroundColor = '#10b981';
+        }
     }
 }
 

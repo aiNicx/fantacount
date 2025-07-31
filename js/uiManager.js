@@ -12,6 +12,12 @@ export class UIManager {
     showMainApp() {
         document.getElementById('setupSection').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
+        
+        // Mostra il bottone export quando l'app principale è attiva
+        const exportBtn = document.getElementById('exportBtn');
+        if (exportBtn) {
+            exportBtn.style.display = 'block';
+        }
     }
 
 
