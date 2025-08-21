@@ -149,9 +149,12 @@ export class ExcelParser {
                      map['fvm'] = index;
                      break;
                  case 'fvm m':
-                     map['fvmM'] = index;
-                     break;
-             }
+                    map['fvmM'] = index;
+                    break;
+                case 'fascia':
+                    map['fascia'] = index;
+                    break;
+            }
         });
 
         // Check if we found the essential columns
@@ -185,6 +188,7 @@ export class ExcelParser {
             diffM: this.parseNumber(getValue('diffM')) || 0,
             fvm: this.parseNumber(getValue('fvm')) || 0,
             fvmM: this.parseNumber(getValue('fvmM')) || 0,
+            fascia: this.parseNumber(getValue('fascia')) || null,
             status: 'libero',
             boughtBy: null,
             boughtPrice: null

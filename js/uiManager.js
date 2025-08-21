@@ -5,7 +5,8 @@ export class UIManager {
             role: '',
             team: '',
             sort: 'nome',
-            status: 'all' // 'all', 'available', 'bought'
+            status: 'all', // 'all', 'available', 'bought'
+            fascia: '' // '', '1', '2', '3', '4'
         };
     }
 
@@ -131,8 +132,12 @@ export class UIManager {
         document.querySelector('#availableCount .count').textContent = availableCount;
         document.querySelector('#boughtCount .count').textContent = boughtCount;
         
+        // Update fascia counters (always show only available players)
+        this.updateFasciaCounters(baseFilteredPlayers);
+        
         // Update the active counter based on current filter
         this.updateActiveCounter(this.currentFilters.status);
+        this.updateActiveFasciaCounter(this.currentFilters.fascia);
         
         if (filteredPlayers.length === 0) {
             container.innerHTML = '<div class="loading">Nessun giocatore trovato</div>';
@@ -151,7 +156,10 @@ export class UIManager {
                  onclick="window.app.uiManager.openAuctionModal(${player.id})">
                 <div class="player-header">
                     <div class="player-name">${player.nome}</div>
-                    <div class="player-role ${roleClass}">${player.ruolo}</div>
+                    <div class="player-badges">
+                        <div class="player-role ${roleClass}">${player.ruolo}</div>
+                        ${player.fascia ? `<div class="player-fascia fascia-${player.fascia}">F${player.fascia}</div>` : ''}
+                    </div>
                 </div>
                 <div class="player-team-row">
                     <div class="player-team">${player.squadra}</div>
@@ -195,6 +203,11 @@ export class UIManager {
 
         if (this.currentFilters.team) {
             players = players.filter(p => p.squadra === this.currentFilters.team);
+        }
+
+        if (this.currentFilters.fascia) {
+            const fasciaNumber = parseInt(this.currentFilters.fascia);
+            players = players.filter(p => p.fascia === fasciaNumber);
         }
 
         return players;
@@ -244,7 +257,17 @@ export class UIManager {
 
     filterByStatus(status) {
         this.currentFilters.status = status;
+        this.currentFilters.fascia = ''; // Reset fascia filter when changing status
         this.updateActiveCounter(status);
+        this.updateActiveFasciaCounter('');
+        this.renderPlayers();
+    }
+
+    filterByFascia(fasciaNumber) {
+        this.currentFilters.fascia = fasciaNumber.toString();
+        this.currentFilters.status = 'all'; // Show both available and bought when filtering by fascia
+        this.updateActiveCounter('all');
+        this.updateActiveFasciaCounter(fasciaNumber.toString());
         this.renderPlayers();
     }
 
@@ -258,6 +281,47 @@ export class UIManager {
         const activeCounterId = activeStatus === 'all' ? 'totalCount' : 
                                activeStatus === 'available' ? 'availableCount' : 'boughtCount';
         document.getElementById(activeCounterId).classList.add('active');
+    }
+
+    updateActiveFasciaCounter(activeFascia) {
+        // Remove active class from all fascia counters
+        document.querySelectorAll('.fascia-item').forEach(counter => {
+            counter.classList.remove('active');
+        });
+        
+        // Add active class to selected fascia counter
+        if (activeFascia) {
+            const activeFasciaId = `fascia${activeFascia}Count`;
+            const element = document.getElementById(activeFasciaId);
+            if (element) {
+                element.classList.add('active');
+            }
+        }
+    }
+
+    updateFasciaCounters(players) {
+        // Calculate available players count for each fascia
+        const fasciaStats = {
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0
+        };
+
+        // Count only available players (not bought) for each fascia
+        players.filter(p => p.status !== 'comprato').forEach(player => {
+            if (player.fascia && fasciaStats.hasOwnProperty(player.fascia)) {
+                fasciaStats[player.fascia]++;
+            }
+        });
+
+        // Update the UI counters
+        for (let i = 1; i <= 4; i++) {
+            const countElement = document.querySelector(`#fascia${i}Count .count`);
+            if (countElement) {
+                countElement.textContent = fasciaStats[i];
+            }
+        }
     }
 
     canBuyPlayer(participantName, playerRole) {

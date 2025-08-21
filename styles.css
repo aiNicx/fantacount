@@ -360,6 +360,81 @@ input:focus, select:focus {
     font-weight: 600;
 }
 
+/* Fascia Counters */
+.fascia-counters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+}
+
+.fascia-item {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: white;
+    transition: var(--transition);
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.fascia-item:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.fascia-item.active {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    border-width: 2px;
+}
+
+.fascia-item .count {
+    font-weight: 600;
+}
+
+.fascia-1 {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border-color: #FFD700;
+}
+
+.fascia-1:hover, .fascia-1.active {
+    border-color: #FFA500;
+}
+
+.fascia-2 {
+    background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+    border-color: #C0C0C0;
+}
+
+.fascia-2:hover, .fascia-2.active {
+    border-color: #A0A0A0;
+}
+
+.fascia-3 {
+    background: linear-gradient(135deg, #CD7F32, #B8860B);
+    border-color: #CD7F32;
+}
+
+.fascia-3:hover, .fascia-3.active {
+    border-color: #B8860B;
+}
+
+.fascia-4 {
+    background: linear-gradient(135deg, #6B7280, #4B5563);
+    border-color: #6B7280;
+}
+
+.fascia-4:hover, .fascia-4.active {
+    border-color: #4B5563;
+}
+
 /* Formation limit indicators */
 .role-count.at-limit {
     background-color: #f59e0b;
@@ -424,6 +499,12 @@ input:focus, select:focus {
     margin-bottom: 0.5rem;
 }
 
+.player-badges {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
 .player-name {
     font-weight: 600;
     font-size: 1rem;
@@ -452,6 +533,30 @@ input:focus, select:focus {
 
 .role-attacker {
     background: var(--role-attacker);
+}
+
+.player-fascia {
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.player-fascia.fascia-1 {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+}
+
+.player-fascia.fascia-2 {
+    background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+}
+
+.player-fascia.fascia-3 {
+    background: linear-gradient(135deg, #CD7F32, #B8860B);
+}
+
+.player-fascia.fascia-4 {
+    background: linear-gradient(135deg, #6B7280, #4B5563);
 }
 
 .player-team-row {
@@ -589,6 +694,17 @@ input:focus, select:focus {
     }
     
     .counter-item {
+        font-size: 0.75rem;
+        padding: 0.375rem 0.5rem;
+    }
+    
+    .fascia-counters {
+        gap: 0.25rem;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+    }
+    
+    .fascia-item {
         font-size: 0.75rem;
         padding: 0.375rem 0.5rem;
     }
